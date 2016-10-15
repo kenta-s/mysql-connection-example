@@ -12,12 +12,14 @@ public class MySQLConnection {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, password);
             Statement statement = con.createStatement();
-            String sql = "select * from users";
-            ResultSet result = statement.executeQuery(sql);
-            while(result.next()){
-               int id = result.getInt("id");
-               System.out.println("result -> " + id);
-            }
+            for(String table: args){
+               String sql = "select * from " + table;
+               ResultSet result = statement.executeQuery(sql);
+               while(result.next()){
+                  int id = result.getInt("id");
+                  System.out.println("result -> " + id);
+               };
+            };
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             System.out.println("Failed to load JDBC driver");
         } catch (SQLException e) {
