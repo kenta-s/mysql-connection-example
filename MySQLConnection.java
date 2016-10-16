@@ -1,8 +1,9 @@
 import java.sql.*;
 
 public class MySQLConnection {
-    public static void main(String args[]) {
+    public ResultSet[] main(String args[]) {
         Connection con = null;
+        ResultSet[] resultSet = new ResultSet[args.length];
         String host = System.getenv("DB_HOST");
         String port = System.getenv("DB_PORT");
         String database = System.getenv("DB_NAME");
@@ -12,13 +13,10 @@ public class MySQLConnection {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, password);
             Statement statement = con.createStatement();
-            for(String table: args){
-               String sql = "select * from " + table;
+            for (int i = 0; i < args.length; i++){
+               String sql = "select * from " + args[i];
                ResultSet result = statement.executeQuery(sql);
-               while(result.next()){
-                  int id = result.getInt("id");
-                  System.out.println("result -> " + id);
-               };
+               resultSet[i] = result;
             };
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             System.out.println("Failed to load JDBC driver");
@@ -33,5 +31,6 @@ public class MySQLConnection {
                 }
             }
         }
+      return resultSet;
     }
 }
